@@ -62,30 +62,57 @@ public class TarefaController : ControllerBase
 
     [HttpPatch]
     [Route("atualizar/{id}")]
-    public IActionResult Atualizar(int id)
+    public IActionResult Atualizar(int id,  [FromBody] Tarefa tarefa)
     {
         try
         {
-            Tarefa tarefaExistente = _context.Tarefas.Find(id) ?? throw new InvalidOperationException($"Tarefa com id {id} não encontrado");
+        Tarefa? tarefaExistente = _context.Tarefas.FirstOrDefault(x => x.TarefaId == id);
 
-                 
-            if (tarefaExistente != null)
+            if (tarefaExistente != null && tarefaExistente.StatusId == 3)
             {
-                if(tarefaExistente.StatusId == 1){
-                    tarefaExistente.StatusId = 2;
-                     _context.SaveChanges();
-                    return Ok(tarefaExistente);
-                }else if(tarefaExistente.StatusId == 2){
-                    tarefaExistente.StatusId = 2;
-                    _context.SaveChanges();
-                    return Ok(tarefaExistente);
-                }else if(tarefaExistente.StatusId == 3){
-                    tarefaExistente.StatusId = 1;
-                    _context.SaveChanges();
-                    return Ok(tarefaExistente);
-                }
-                
+                tarefaExistente.Titulo = tarefa.Titulo;
+                tarefaExistente.Descricao = tarefa.Descricao;
+                tarefaExistente.CategoriaId = tarefa.CategoriaId;
+                tarefaExistente.StatusId = 1;
+
+                _context.Tarefas.Update(tarefaExistente);
+                _context.SaveChanges();
+                Console.WriteLine("Id da tarefa", tarefaExistente.StatusId);
+
+                return Ok();
             }
+            if (tarefaExistente != null && tarefaExistente.StatusId == 1)
+            {
+                tarefaExistente.Titulo = tarefa.Titulo;
+                tarefaExistente.Descricao = tarefa.Descricao;
+                tarefaExistente.CategoriaId = tarefa.CategoriaId;
+                tarefaExistente.StatusId = 2;
+
+                _context.Tarefas.Update(tarefaExistente);
+                _context.SaveChanges();
+                Console.WriteLine("Id da tarefa", tarefaExistente.StatusId);
+
+                return Ok();
+            }
+                        if (tarefaExistente != null && tarefaExistente.StatusId == 2)
+            {
+                tarefaExistente.Titulo = tarefa.Titulo;
+                tarefaExistente.Descricao = tarefa.Descricao;
+                tarefaExistente.CategoriaId = tarefa.CategoriaId;
+                tarefaExistente.StatusId = 3;
+
+                _context.Tarefas.Update(tarefaExistente);
+                _context.SaveChanges();
+                Console.WriteLine("Id da tarefa", tarefaExistente.StatusId);
+
+                return Ok();
+            }
+
+                
+                _context.SaveChanges();
+                return Ok(tarefaExistente);
+
+                
             return NotFound();
         }
         catch (Exception e)
