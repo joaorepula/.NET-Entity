@@ -1,0 +1,29 @@
+@base_url = https://localhost:7015/api/tarefa
+
+### Listar Tarefas ###
+GET {{base_url}}/listar
+
+### Listar Tarefas Não Concluidas ###
+GET {{base_url}}/listarNaoConcluidas
+
+### Listar Tarefas Concluidas ###
+GET {{base_url}}/listarConcluidas
+
+
+### Criar Tarefa ###
+POST {{base_url}}/cadastrar
+Content-Type: application/json
+
+{
+  "Titulo": "Compras no Supermercado",
+  "Descricao": "1. Fazer lista de compras: pão, leite, ovos, frutas, vegetais",
+  "CategoriaId": 4
+}
+
+
+### Criar Tarefa ###
+PATCH {{base_url}}/atualizar/1
+Content-Type: application/json
+
+
+
