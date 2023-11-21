@@ -14,21 +14,36 @@ public class TarefaController : ControllerBase
     public TarefaController(AppDataContext context) =>
         _context = context;
 
-    // GET: api/tarefa/listar
-    [HttpGet]
-    [Route("listar")]
-    public IActionResult Listar()
+[HttpGet]
+[Route("listar")]
+public IActionResult Listar()
+{
+    try
     {
-        try
-        {
-            List<Tarefa> tarefas = _context.Tarefas.Include(x => x.Categoria).ToList();
-            return Ok(tarefas);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+        var tarefasComCategoria = _context.Tarefas
+            .Join(_context.Categorias,
+                  tarefa => tarefa.CategoriaId,
+                  categoria => categoria.CategoriaId,
+                  (tarefa, categoria) => new
+                  {
+                      TarefaId = tarefa.TarefaId,
+                      Titulo = tarefa.Titulo,
+                      Descricao = tarefa.Descricao,
+                      CriadoEm = tarefa.CriadoEm,
+                      Categoria = categoria, 
+                      CategoriaId = tarefa.CategoriaId,
+                      Status = tarefa.Status,
+                      StatusId = tarefa.StatusId
+                  })
+            .ToList();
+
+        return Ok(tarefasComCategoria);
     }
+    catch (Exception e)
+    {
+        return BadRequest(e.Message);
+    }
+}
 
     [HttpGet]
     [Route("listarNaoConcluidas")]

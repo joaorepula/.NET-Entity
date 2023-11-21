@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddDbContext<AppDataContext>(
-    options => options.UseSqlite("Data Source=COLOQUE_O_SEU_NOME_AQUI.db")
+    options => options.UseSqlite("Data Source=Joao.db")
 );
 
 builder.Services.AddControllers();
@@ -15,6 +15,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors(
+    c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
